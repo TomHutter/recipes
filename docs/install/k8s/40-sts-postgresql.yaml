@@ -15,8 +15,6 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      annotations:
-        backup.velero.io/backup-volumes: data
       labels:
         app: recipes
         tier: database
@@ -47,14 +45,14 @@ spec:
               key: postgresql-postgres-password
         - name: POSTGRES_DB
           value: recipes
-        image: docker.io/bitnami/postgresql:11.5.0-debian-9-r60
+        image: docker.io/bitnami/postgresql:13-debian-11
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
             command:
             - sh
             - -c
-            - exec pg_isready -U "postgres" -d "wiki" -h 127.0.0.1 -p 5432
+            - exec pg_isready -U "postgres" -d "recipes" -h 127.0.0.1 -p 5432
           failureThreshold: 6
           initialDelaySeconds: 30
           periodSeconds: 10
@@ -71,7 +69,7 @@ spec:
             - -c
             - -e
             - |
-              pg_isready -U "postgres" -d "wiki" -h 127.0.0.1 -p 5432
+              pg_isready -U "postgres" -d "recipes" -h 127.0.0.1 -p 5432
               [ -f /opt/bitnami/postgresql/tmp/.initialized ]
           failureThreshold: 6
           initialDelaySeconds: 5
